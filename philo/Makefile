@@ -1,4 +1,4 @@
-_BOLD=$'\033[0;1m
+_BOLD=$'\033[1m
 _UNDER=$'\033[4m
 _REV=$'\033[7m
 _END=$'\033[0m
@@ -6,7 +6,7 @@ _END=$'\033[0m
 # Colors
 _GREY=$'\033[30m
 _RED=$'\033[31m
-_GREEN=$'\033[0;32m
+_GREEN=$'\033[32m
 _YELLOW=$'\033[33m
 _BLUE=$'\033[34m
 _PURPLE=$'\033[35m
@@ -25,6 +25,7 @@ _IWHITE=$'\033[47m
 
 SRC = \
 	src/main.c \
+	src/init_struct.c \
 	src/philo.c \
 	src/ft_strlen.c \
 	src/ft_error.c \
@@ -102,6 +103,8 @@ define norme =
 endef
 
 clean:
+	@echo "$(_BOLD)$(_CYAN)Cleaning...$(_END)"
+	@rm -rf $(BUILD_DIR)
 	@rm -f $(OBJ)
 
 fclean: clean

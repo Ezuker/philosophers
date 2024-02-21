@@ -6,7 +6,7 @@
 /*   By: bcarolle <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/18 18:33:41 by bcarolle          #+#    #+#             */
-/*   Updated: 2024/02/21 19:38:40 by bcarolle         ###   ########.fr       */
+/*   Updated: 2024/02/21 23:51:02 by bcarolle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,8 +23,16 @@ typedef struct s_data	t_data;
 
 typedef struct s_philo
 {
-	int		id;
-	t_data	*parent;
+	pthread_t		philo_thread;
+	int				id;
+	size_t			timestamp_last_meal;
+	int				num_times_eaten;
+	pthread_mutex_t	*left_fork;
+	pthread_mutex_t	*right_fork;
+	pthread_mutex_t	*is_eating;
+	pthread_mutex_t	*is_sleeping;
+	pthread_mutex_t	*is_thinking;
+	t_data			*parent;
 }				t_philo;
 
 typedef struct s_data
@@ -37,9 +45,17 @@ typedef struct s_data
 	t_philo	*philo;
 }				t_data;
 
-size_t	ft_strlen(const char *str);
+// Parsing + init
+int		struct_init_philo(t_data *data);
+int		struct_init_data(int argc, char **argv, t_data *data);
 int		failed_malloc(void);
+
+// Utils
+size_t	ft_strlen(const char *str);
 int		ft_atoi(const char *str);
 int		ft_print_error(char *str);
+
+// Philo
+int		philo(t_data *data);
 
 #endif
