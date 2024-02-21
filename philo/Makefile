@@ -39,7 +39,7 @@ BOOL_EXEC = 0
 EXEC = ./$(NAME)
 IS_COMPILING = 0
 
-all: display $(NAME)
+all: $(NAME)
 
 exec:
 	@$(eval BOOL_EXEC = 1)
@@ -61,31 +61,33 @@ $(NAME): $(OBJ)
 		$(EXEC); \
 	fi
 
-
-display :
-	@echo
-	@echo "		$(_CYAN)	"" ██▓███   ██░ ██  ██▓ ██▓     ▒█████  "
-	@echo "		$(_CYAN)	""▓██░  ██▒▓██░ ██▒▓██▒▓██▒    ▒██▒  ██▒"
-	@echo "		$(_CYAN)	""▓██░ ██▓▒▒██▀▀██░▒██▒▒██░    ▒██░  ██▒"
-	@echo "		$(_CYAN)	""▒██▄█▓▒ ▒░▓█ ░██ ░██░▒██░    ▒██   ██░"
-	@echo "		$(_CYAN)	""▒██▒ ░  ░░▓█▒░██▓░██░░██████▒░ ████▓▒░"
-	@echo "		$(_CYAN)	""▒▓▒░ ░  ░ ▒ ░░▒░▒░▓  ░ ▒░▓  ░░ ▒░▒░▒░ "
-	@echo "		$(_CYAN)	""░▒ ░      ▒ ░▒░ ░ ▒ ░░ ░ ▒  ░  ░ ▒ ▒░ "
-	@echo "		$(_CYAN)	""░░        ░  ░░ ░ ▒ ░  ░ ░   ░ ░ ░ ▒  "
-	@echo "		$(_CYAN)	""          ░  ░  ░ ░      ░  ░    ░ ░  "
-
-valgrind:
+valgrind: display_logo $(NAME)
 	@valgrind --leak-check=full --show-leak-kinds=all --track-origins=yes $(EXEC)
 
 %.o: %.c
 	@ \
 	if [ $(IS_COMPILING) -eq 0 ]; then \
+		$(MAKE) -s display_logo; \
+		echo; \
 		echo "$(_BOLD)$(_CYAN)Entering ($(_RED)./src$(_CYAN))$(_END)"; \
 		echo; \
 	fi
 	@$(eval IS_COMPILING = 1)
 	@echo "$(_BOLD)$(_RED) $< : $(_END) $(_GREY) $(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@ $(_END)"
 	@$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@
+
+display_logo :
+	@ \
+	echo "";\
+	echo "		$(_CYAN)	"" ██▓███   ██░ ██  ██▓ ██▓     ▒█████  "; \
+	echo "		$(_CYAN)	""▓██░  ██▒▓██░ ██▒▓██▒▓██▒    ▒██▒  ██▒";\
+	echo "		$(_CYAN)	""▓██░ ██▓▒▒██▀▀██░▒██▒▒██░    ▒██░  ██▒";\
+	echo "		$(_CYAN)	""▒██▄█▓▒ ▒░▓█ ░██ ░██░▒██░    ▒██   ██░";\
+	echo "		$(_CYAN)	""▒██▒ ░  ░░▓█▒░██▓░██░░██████▒░ ████▓▒░";\
+	echo "		$(_CYAN)	""▒▓▒░ ░  ░ ▒ ░░▒░▒░▓  ░ ▒░▓  ░░ ▒░▒░▒░ ";\
+	echo "		$(_CYAN)	""░▒ ░      ▒ ░▒░ ░ ▒ ░░ ░ ▒  ░  ░ ▒ ▒░ ";\
+	echo "		$(_CYAN)	""░░        ░  ░░ ░ ▒ ░  ░ ░   ░ ░ ░ ▒  ";\
+	echo "		$(_CYAN)	""          ░  ░  ░ ░      ░  ░    ░ ░  ""$(_END)";\
 
 define norme =
 	@echo
