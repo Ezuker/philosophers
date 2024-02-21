@@ -26,6 +26,9 @@ _IWHITE=$'\033[47m
 SRC = \
 	src/main.c \
 	src/philo.c \
+	src/ft_strlen.c \
+	src/ft_error.c \
+	src/ft_atoi.c \
 
 INCLUDES = \
 	-I./include/ \
