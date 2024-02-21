@@ -24,13 +24,14 @@ _ICYAN=$'\033[46m
 _IWHITE=$'\033[47m
 
 SRC = \
-	./src/main.c \
-	./src/philo.c \
+	src/main.c \
+	src/philo.c \
 
 INCLUDES = \
 	-I./include/ \
 
-OBJ = $(SRC:.c=.o)
+OBJ = $(SRC:%.c=$(BUILD_DIR)%.o)
+BUILD_DIR = ./build/
 CC = cc
 CFLAGS = -Wall -Wextra -Werror -g
 NAME = philo
@@ -40,9 +41,6 @@ EXEC = ./$(NAME)
 IS_COMPILING = 0
 
 all: $(NAME)
-
-exec:
-	@$(eval BOOL_EXEC = 1)
 
 $(NAME): $(OBJ)
 	@echo
@@ -64,9 +62,10 @@ $(NAME): $(OBJ)
 valgrind: display_logo $(NAME)
 	@valgrind --leak-check=full --show-leak-kinds=all --track-origins=yes $(EXEC)
 
-%.o: %.c
+$(BUILD_DIR)%.o: %.c
 	@ \
 	if [ $(IS_COMPILING) -eq 0 ]; then \
+		mkdir -p $(@D) ./build; \
 		$(MAKE) -s display_logo; \
 		echo; \
 		echo "$(_BOLD)$(_CYAN)Entering ($(_RED)./src$(_CYAN))$(_END)"; \
@@ -107,4 +106,4 @@ fclean: clean
 
 re: fclean all
 
-.PHONY: all clean fclean re
+.PHONY: all clean fclean re valgrind
