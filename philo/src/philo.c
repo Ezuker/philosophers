@@ -6,7 +6,7 @@
 /*   By: bcarolle <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/18 19:52:07 by bcarolle          #+#    #+#             */
-/*   Updated: 2024/02/22 00:13:21 by bcarolle         ###   ########.fr       */
+/*   Updated: 2024/02/22 19:47:48 by bcarolle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,8 +17,12 @@ void	*philo_routine(void *arg)
 	t_philo	*philo;
 
 	philo = (t_philo *)arg;
-	printf("philo id: %d\n", philo->id);
-	printf("philo_routine\n");
+	(void)philo;
+	pthread_mutex_lock(&philo->eating_lock);
+	usleep(philo->parent->time_to_eat);
+	philo->num_times_eaten++;
+	printf("%d has taken a fork\n", philo->id);
+	pthread_mutex_unlock(&philo->eating_lock);
 	return (arg);
 }
 
