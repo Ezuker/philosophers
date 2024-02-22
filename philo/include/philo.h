@@ -6,7 +6,7 @@
 /*   By: bcarolle <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/18 18:33:41 by bcarolle          #+#    #+#             */
-/*   Updated: 2024/02/22 19:41:20 by bcarolle         ###   ########.fr       */
+/*   Updated: 2024/02/22 23:50:34 by bcarolle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,7 @@ typedef struct s_philo
 	int				id;
 	size_t			timestamp_last_meal;
 	int				num_times_eaten;
+	size_t			time;
 	pthread_mutex_t	left_fork;
 	pthread_mutex_t	right_fork;
 	pthread_mutex_t	eating_lock;
@@ -54,6 +55,7 @@ int		failed_malloc(void);
 size_t	ft_strlen(const char *str);
 int		ft_atoi(const char *str);
 int		ft_print_error(char *str);
+size_t	ft_get_current_time(void);
 
 // Philo
 int		philo(t_data *data);

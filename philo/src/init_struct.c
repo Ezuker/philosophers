@@ -6,7 +6,7 @@
 /*   By: bcarolle <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 23:36:39 by bcarolle          #+#    #+#             */
-/*   Updated: 2024/02/22 19:10:59 by bcarolle         ###   ########.fr       */
+/*   Updated: 2024/02/22 23:50:50 by bcarolle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,8 @@ int	struct_init_philo(t_data *data)
 	{
 		data->philo[i].id = i;
 		data->philo[i].parent = data;
-		pthread_mutex_init(&data->philo[i].is_eating, NULL);
+		data->philo[i].time = ft_get_current_time();
+		pthread_mutex_init(&data->philo[i].eating_lock, NULL);
 		i++;
 	}
 	data->philo[i].id = -1;

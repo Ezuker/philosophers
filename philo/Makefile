@@ -30,6 +30,7 @@ SRC = \
 	src/ft_strlen.c \
 	src/ft_error.c \
 	src/ft_atoi.c \
+	src/ft_get_current_time.c \
 
 INCLUDES = \
 	-I./include/ \
