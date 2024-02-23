@@ -6,7 +6,7 @@
 /*   By: bcarolle <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/18 19:52:07 by bcarolle          #+#    #+#             */
-/*   Updated: 2024/02/23 19:58:00 by bcarolle         ###   ########.fr       */
+/*   Updated: 2024/02/23 23:58:35 by bcarolle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,14 +22,14 @@ void	*philo_routine(void *arg)
 	{
 		pthread_mutex_lock(philo->left_fork);
 		pthread_mutex_lock(&philo->right_fork);
+		time = ft_get_current_time() - philo->time;
 		printf("%ld %d has taken a fork\n", time, philo->id);
 		printf("%ld %d has taken a fork\n", time, philo->id);
 		pthread_mutex_lock(&philo->eating_lock);
-		time = ft_get_current_time() - philo->time;
 		philo->num_times_eaten++;
 		philo->timestamp_last_meal = time;
-		usleep(philo->parent->time_to_eat * 1000);
 		printf("%ld %d is eating\n", time, philo->id);
+		usleep(philo->parent->time_to_eat * 1000);
 		pthread_mutex_unlock(&philo->eating_lock);
 		pthread_mutex_unlock(philo->left_fork);
 		pthread_mutex_unlock(&philo->right_fork);
@@ -44,13 +44,6 @@ void	*philo_routine(void *arg)
 		time = ft_get_current_time() - philo->time;
 		printf("%ld %d is thinking\n", time, philo->id);
 		pthread_mutex_unlock(&philo->is_thinking);
-		
-		if (time - philo->timestamp_last_meal > philo->parent->time_to_die)
-		{
-			philo->parent->is_dead = 1;
-			printf("%ld %d died\n", time, philo->id);
-			return (NULL);
-		}
 	}
 	return (arg);
 }
@@ -59,15 +52,26 @@ void	*monitor(void *arg)
 {
 	int		*status;
 	t_data	*data;
+	int		i;
+	size_t	time;
 
 	data = (t_data *)arg;
 	status = malloc(sizeof(int));
+	*status = 0;
 	while (1)
 	{
-		if (data->is_dead)
+		i = 0;
+		while (i < data->num_philo)
 		{
-			*status = 1;
-			return (status);
+			time = ft_get_current_time() - data->philo[i].time;
+			if (time - data->philo[i].timestamp_last_meal > data->time_to_die)
+			{
+				data->is_dead = 1;
+				printf("%ld %d died\n", time, data->philo[i].id);
+				*status = 1;
+				return (status);
+			}
+			i++;
 		}
 	}
 	return (status);
