@@ -6,7 +6,7 @@
 /*   By: bcarolle <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/18 18:33:41 by bcarolle          #+#    #+#             */
-/*   Updated: 2024/02/22 23:50:34 by bcarolle         ###   ########.fr       */
+/*   Updated: 2024/02/23 19:15:02 by bcarolle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ typedef struct s_philo
 	size_t			timestamp_last_meal;
 	int				num_times_eaten;
 	size_t			time;
-	pthread_mutex_t	left_fork;
+	pthread_mutex_t	*left_fork;
 	pthread_mutex_t	right_fork;
 	pthread_mutex_t	eating_lock;
 	pthread_mutex_t	is_sleeping;
@@ -38,6 +38,7 @@ typedef struct s_philo
 
 typedef struct s_data
 {
+	int		is_dead;
 	int		num_philo;
 	int		num_times_eat;
 	size_t	time_to_die;

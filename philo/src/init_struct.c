@@ -6,7 +6,7 @@
 /*   By: bcarolle <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 23:36:39 by bcarolle          #+#    #+#             */
-/*   Updated: 2024/02/22 23:50:50 by bcarolle         ###   ########.fr       */
+/*   Updated: 2024/02/23 18:18:00 by bcarolle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,16 +16,22 @@ int	struct_init_philo(t_data *data)
 {
 	int	i;
 
-	i = 0;
 	data->philo = malloc(sizeof(t_philo) * (data->num_philo + 1));
 	if (!data->philo)
 		return (failed_malloc());
+	i = 0;
 	while (i < data->num_philo)
 	{
-		data->philo[i].id = i;
+		data->philo[i].id = i + 1;
 		data->philo[i].parent = data;
 		data->philo[i].time = ft_get_current_time();
 		pthread_mutex_init(&data->philo[i].eating_lock, NULL);
+		data->philo[i].num_times_eaten = 0;
+		pthread_mutex_init(&data->philo[i].right_fork, NULL);
+		if (i == 0)
+			data->philo[i].left_fork = &data->philo[data->num_philo - 1].right_fork;
+		else
+			data->philo[i].left_fork = &data->philo[i - 1].right_fork;
 		i++;
 	}
 	data->philo[i].id = -1;

@@ -6,7 +6,7 @@
 /*   By: bcarolle <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/18 19:52:07 by bcarolle          #+#    #+#             */
-/*   Updated: 2024/02/22 23:53:53 by bcarolle         ###   ########.fr       */
+/*   Updated: 2024/02/23 19:58:00 by bcarolle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,26 +20,98 @@ void	*philo_routine(void *arg)
 	philo = (t_philo *)arg;
 	while (1)
 	{
+		pthread_mutex_lock(philo->left_fork);
+		pthread_mutex_lock(&philo->right_fork);
+		printf("%ld %d has taken a fork\n", time, philo->id);
+		printf("%ld %d has taken a fork\n", time, philo->id);
 		pthread_mutex_lock(&philo->eating_lock);
 		time = ft_get_current_time() - philo->time;
-		usleep(philo->parent->time_to_eat);
 		philo->num_times_eaten++;
-		printf("%ld %d has taken a fork\n", time, philo->id);
+		philo->timestamp_last_meal = time;
+		usleep(philo->parent->time_to_eat * 1000);
+		printf("%ld %d is eating\n", time, philo->id);
 		pthread_mutex_unlock(&philo->eating_lock);
+		pthread_mutex_unlock(philo->left_fork);
+		pthread_mutex_unlock(&philo->right_fork);
+		
+		pthread_mutex_lock(&philo->is_sleeping);
+		time = ft_get_current_time() - philo->time;
+		printf("%ld %d is sleeping\n", time, philo->id);
+		usleep(philo->parent->time_to_sleep * 1000);
+		pthread_mutex_unlock(&philo->is_sleeping);
+		
+		pthread_mutex_lock(&philo->is_thinking);
+		time = ft_get_current_time() - philo->time;
+		printf("%ld %d is thinking\n", time, philo->id);
+		pthread_mutex_unlock(&philo->is_thinking);
+		
+		if (time - philo->timestamp_last_meal > philo->parent->time_to_die)
+		{
+			philo->parent->is_dead = 1;
+			printf("%ld %d died\n", time, philo->id);
+			return (NULL);
+		}
 	}
 	return (arg);
 }
 
+void	*monitor(void *arg)
+{
+	int		*status;
+	t_data	*data;
+
+	data = (t_data *)arg;
+	status = malloc(sizeof(int));
+	while (1)
+	{
+		if (data->is_dead)
+		{
+			*status = 1;
+			return (status);
+		}
+	}
+	return (status);
+}
+
+void	ft_free_all(t_data *data)
+{
+	int	i;
+
+	i = 0;
+	while (i < data->num_philo)
+	{
+		pthread_mutex_destroy(&data->philo[i].eating_lock);
+		pthread_mutex_destroy(&data->philo[i].right_fork);
+		pthread_mutex_destroy(&data->philo[i].is_sleeping);
+		pthread_mutex_destroy(&data->philo[i].is_thinking);
+		i++;
+	}
+	free(data->philo);
+	free(data);
+}
+
 int	philo(t_data *data)
 {
-	int		i;
+	int			i;
+	int			*status;
+	pthread_t	monitor_thread;
 
 	i = -1;
+	if (pthread_create(&monitor_thread, NULL, &monitor, data))
+		return (ft_print_error("Failed to create thread\n"));
 	while (++i < data->num_philo)
 		if (pthread_create(&data->philo[i].philo_thread,
 				NULL, &philo_routine, &data->philo[i]))
 			return (ft_print_error("Failed to create thread\n"));
 	i = -1;
+	if (pthread_join(monitor_thread, (void **)&status))
+		return (ft_print_error("Failed to join thread\n"));
+	if (*status == 1)
+	{
+		ft_free_all(data);
+		free(status);
+		return (1);
+	}
 	while (++i < data->num_philo)
 		if (pthread_join(data->philo[i].philo_thread, NULL))
 			return (ft_print_error("Failed to join thread\n"));
