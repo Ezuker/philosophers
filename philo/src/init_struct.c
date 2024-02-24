@@ -6,7 +6,7 @@
 /*   By: bcarolle <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 23:36:39 by bcarolle          #+#    #+#             */
-/*   Updated: 2024/02/23 18:18:00 by bcarolle         ###   ########.fr       */
+/*   Updated: 2024/02/24 01:18:26 by bcarolle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,13 +25,16 @@ int	struct_init_philo(t_data *data)
 		data->philo[i].id = i + 1;
 		data->philo[i].parent = data;
 		data->philo[i].time = ft_get_current_time();
-		pthread_mutex_init(&data->philo[i].eating_lock, NULL);
+		data->philo[i].timestamp_last_meal = 0;
 		data->philo[i].num_times_eaten = 0;
-		pthread_mutex_init(&data->philo[i].right_fork, NULL);
+		pthread_mutex_init(&data->philo[i].eating_lock, NULL);
+		pthread_mutex_init(&data->philo[i].is_sleeping, NULL);
+		pthread_mutex_init(&data->philo[i].is_thinking, NULL);
+		pthread_mutex_init(&data->philo[i].r_fork, NULL);
 		if (i == 0)
-			data->philo[i].left_fork = &data->philo[data->num_philo - 1].right_fork;
+			data->philo[i].l_fork = &data->philo[data->num_philo - 1].r_fork;
 		else
-			data->philo[i].left_fork = &data->philo[i - 1].right_fork;
+			data->philo[i].l_fork = &data->philo[i - 1].r_fork;
 		i++;
 	}
 	data->philo[i].id = -1;

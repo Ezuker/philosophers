@@ -6,7 +6,7 @@
 /*   By: bcarolle <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/18 19:52:07 by bcarolle          #+#    #+#             */
-/*   Updated: 2024/02/23 23:58:35 by bcarolle         ###   ########.fr       */
+/*   Updated: 2024/02/24 02:02:52 by bcarolle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,8 +20,8 @@ void	*philo_routine(void *arg)
 	philo = (t_philo *)arg;
 	while (1)
 	{
-		pthread_mutex_lock(philo->left_fork);
-		pthread_mutex_lock(&philo->right_fork);
+		pthread_mutex_lock(philo->l_fork);
+		pthread_mutex_lock(&philo->r_fork);
 		time = ft_get_current_time() - philo->time;
 		printf("%ld %d has taken a fork\n", time, philo->id);
 		printf("%ld %d has taken a fork\n", time, philo->id);
@@ -31,8 +31,8 @@ void	*philo_routine(void *arg)
 		printf("%ld %d is eating\n", time, philo->id);
 		usleep(philo->parent->time_to_eat * 1000);
 		pthread_mutex_unlock(&philo->eating_lock);
-		pthread_mutex_unlock(philo->left_fork);
-		pthread_mutex_unlock(&philo->right_fork);
+		pthread_mutex_unlock(&philo->r_fork);
+		pthread_mutex_unlock(philo->l_fork);
 		
 		pthread_mutex_lock(&philo->is_sleeping);
 		time = ft_get_current_time() - philo->time;
@@ -63,6 +63,14 @@ void	*monitor(void *arg)
 		i = 0;
 		while (i < data->num_philo)
 		{
+			if (data->num_times_eat != -1
+				&& data->philo[i].num_times_eaten >= data->num_times_eat)
+				i++;
+			else
+				break ;
+		}
+		while (i < data->num_philo)
+		{
 			time = ft_get_current_time() - data->philo[i].time;
 			if (time - data->philo[i].timestamp_last_meal > data->time_to_die)
 			{
@@ -85,7 +93,7 @@ void	ft_free_all(t_data *data)
 	while (i < data->num_philo)
 	{
 		pthread_mutex_destroy(&data->philo[i].eating_lock);
-		pthread_mutex_destroy(&data->philo[i].right_fork);
+		pthread_mutex_destroy(&data->philo[i].r_fork);
 		pthread_mutex_destroy(&data->philo[i].is_sleeping);
 		pthread_mutex_destroy(&data->philo[i].is_thinking);
 		i++;

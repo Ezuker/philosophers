@@ -1,37 +1,39 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.c                                             :+:      :+:    :+:   */
+/*   ft_atoi.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: bcarolle <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/02/18 18:34:30 by bcarolle          #+#    #+#             */
-/*   Updated: 2024/02/24 01:15:03 by bcarolle         ###   ########.fr       */
+/*   Created: 2024/02/21 19:08:55 by bcarolle          #+#    #+#             */
+/*   Updated: 2024/02/21 19:09:05 by bcarolle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-#include <stdio.h>
-
-int	main(int argc, char **argv)
+int	ft_atoi(const char *str)
 {
-	t_data	*data;
+	int		i;
+	int		sign;
+	long	res;
 
-	if (argc < 5 || argc > 6)
-		return (ft_print_error("Wrong number of arguments\n"));
-	data = malloc(sizeof(t_data));
-	if (!data)
-		return (failed_malloc());
-	if (struct_init_data(argc, argv, data))
+	i = 0;
+	sign = 1;
+	res = 0;
+	while (str[i] == ' ' || str[i] == '\t' || str[i] == '\n'
+		|| str[i] == '\v' || str[i] == '\f' || str[i] == '\r')
+		i++;
+	if (str[i] == '-' || str[i] == '+')
 	{
-		free(data);
-		return (1);
+		if (str[i] == '-')
+			sign = -1;
+		i++;
 	}
-	if (philo(data))
+	while (str[i] >= '0' && str[i] <= '9')
 	{
-		ft_free_all(data);
-		return (1);
+		res = res * 10 + (str[i] - '0');
+		i++;
 	}
-	return (0);
+	return (res * sign);
 }
