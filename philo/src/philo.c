@@ -6,7 +6,7 @@
 /*   By: bcarolle <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/18 19:52:07 by bcarolle          #+#    #+#             */
-/*   Updated: 2024/02/24 02:02:52 by bcarolle         ###   ########.fr       */
+/*   Updated: 2024/02/24 02:24:51 by bcarolle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,6 +69,12 @@ void	*monitor(void *arg)
 			else
 				break ;
 		}
+		if (i == data->num_philo)
+		{
+			*status = 0;
+			return (status);
+		}
+		i = 0;
 		while (i < data->num_philo)
 		{
 			time = ft_get_current_time() - data->philo[i].time;
@@ -90,12 +96,13 @@ void	ft_free_all(t_data *data)
 	int	i;
 
 	i = 0;
+	// printf("freeing\n");
 	while (i < data->num_philo)
 	{
-		pthread_mutex_destroy(&data->philo[i].eating_lock);
 		pthread_mutex_destroy(&data->philo[i].r_fork);
-		pthread_mutex_destroy(&data->philo[i].is_sleeping);
-		pthread_mutex_destroy(&data->philo[i].is_thinking);
+		pthread_mutex_destroy(&(data->philo[i].is_sleeping));
+		pthread_mutex_destroy(&(data->philo[i].is_thinking));
+		pthread_mutex_destroy(&(data->philo[i].eating_lock));
 		i++;
 	}
 	free(data->philo);
@@ -123,6 +130,12 @@ int	philo(t_data *data)
 		ft_free_all(data);
 		free(status);
 		return (1);
+	}
+	else if (*status == 0)
+	{
+		ft_free_all(data);
+		free(status);
+		return (0);
 	}
 	while (++i < data->num_philo)
 		if (pthread_join(data->philo[i].philo_thread, NULL))
