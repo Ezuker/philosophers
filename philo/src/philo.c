@@ -6,7 +6,7 @@
 /*   By: bcarolle <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/18 19:52:07 by bcarolle          #+#    #+#             */
-/*   Updated: 2024/02/24 16:02:53 by bcarolle         ###   ########.fr       */
+/*   Updated: 2024/02/24 20:14:44 by bcarolle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,10 +26,17 @@ void	*philo_routine(void *arg)
 {
 	t_philo	*philo;
 	size_t	time;
+	int		is_dead;
 
+	is_dead = 0;
 	philo = (t_philo *)arg;
-	while (1)
+	while (!is_dead)
 	{
+		pthread_mutex_lock(&philo->parent->dead_lock);
+		is_dead = philo->parent->is_dead;
+		pthread_mutex_unlock(&philo->parent->dead_lock);
+		if (is_dead)
+			break ;
 		pthread_mutex_lock(philo->l_fork);
 		pthread_mutex_lock(&philo->r_fork);
 		mutex_print(philo, "%ld %d has taken a fork\n");
@@ -86,7 +93,9 @@ void	*monitor(void *arg)
 			time = ft_get_current_time() - data->philo[i].time;
 			if (time - data->philo[i].timestamp_last_meal > data->time_to_die)
 			{
+				pthread_mutex_lock(&data->dead_lock);
 				data->is_dead = 1;
+				pthread_mutex_unlock(&data->dead_lock);
 				mutex_print(&data->philo[i], "%ld %d died\n");
 				*status = 1;
 				return (status);

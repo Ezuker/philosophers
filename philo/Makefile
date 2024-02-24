@@ -65,7 +65,7 @@ $(NAME): $(OBJ)
 	fi
 
 valgrind: display_logo $(NAME)
-	@valgrind --leak-check=full --show-leak-kinds=all --track-origins=yes $(EXEC)
+	@valgrind --tool=helgrind $(EXEC) 5 800 200 200 7
 
 $(BUILD_DIR)%.o: %.c
 	@ \
