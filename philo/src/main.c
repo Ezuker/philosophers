@@ -6,7 +6,7 @@
 /*   By: bcarolle <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/18 18:34:30 by bcarolle          #+#    #+#             */
-/*   Updated: 2024/02/24 02:23:43 by bcarolle         ###   ########.fr       */
+/*   Updated: 2024/02/24 15:46:55 by bcarolle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,8 +29,6 @@ int	main(int argc, char **argv)
 		return (1);
 	}
 	if (philo(data))
-	{
 		return (1);
-	}
 	return (0);
 }

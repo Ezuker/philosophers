@@ -6,7 +6,7 @@
 /*   By: bcarolle <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/18 18:33:41 by bcarolle          #+#    #+#             */
-/*   Updated: 2024/02/24 01:18:45 by bcarolle         ###   ########.fr       */
+/*   Updated: 2024/02/24 15:51:15 by bcarolle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,18 +33,21 @@ typedef struct s_philo
 	pthread_mutex_t	eating_lock;
 	pthread_mutex_t	is_sleeping;
 	pthread_mutex_t	is_thinking;
+	pthread_mutex_t	print_lock;
 	t_data			*parent;
 }				t_philo;
 
 typedef struct s_data
 {
-	int		is_dead;
-	int		num_philo;
-	int		num_times_eat;
-	size_t	time_to_die;
-	size_t	time_to_eat;
-	size_t	time_to_sleep;
-	t_philo	*philo;
+	int				is_dead;
+	int				num_philo;
+	int				num_times_eat;
+	size_t			time_to_die;
+	size_t			time_to_eat;
+	size_t			time_to_sleep;
+	pthread_mutex_t	write_lock;
+	pthread_mutex_t	dead_lock;
+	t_philo			*philo;
 }				t_data;
 
 // Parsing + init

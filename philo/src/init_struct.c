@@ -6,7 +6,7 @@
 /*   By: bcarolle <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 23:36:39 by bcarolle          #+#    #+#             */
-/*   Updated: 2024/02/24 01:18:26 by bcarolle         ###   ########.fr       */
+/*   Updated: 2024/02/24 15:51:19 by bcarolle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,7 @@ int	struct_init_philo(t_data *data)
 		pthread_mutex_init(&data->philo[i].is_sleeping, NULL);
 		pthread_mutex_init(&data->philo[i].is_thinking, NULL);
 		pthread_mutex_init(&data->philo[i].r_fork, NULL);
+		pthread_mutex_init(&data->philo[i].print_lock, NULL);
 		if (i == 0)
 			data->philo[i].l_fork = &data->philo[data->num_philo - 1].r_fork;
 		else
@@ -56,6 +57,8 @@ int	struct_init_data(int argc, char **argv, t_data *data)
 		data->num_times_eat = -1;
 	else
 		data->num_times_eat = ft_atoi(argv[5]);
+	pthread_mutex_init(&data->write_lock, NULL);
+	pthread_mutex_init(&data->dead_lock, NULL);
 	if (struct_init_philo(data))
 		return (1);
 	return (0);
