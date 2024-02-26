@@ -6,7 +6,7 @@
 /*   By: bcarolle <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/18 18:33:41 by bcarolle          #+#    #+#             */
-/*   Updated: 2024/02/26 16:07:51 by bcarolle         ###   ########.fr       */
+/*   Updated: 2024/02/26 16:40:21 by bcarolle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,6 +60,7 @@ size_t	ft_get_current_time(void);
 void	ft_free_all(t_data *data);
 void	mutex_print(t_philo *philo, char *str);
 int		ft_usleep(size_t milliseconds);
+
 // Philo
 int		philo(t_data *data);
 void	*monitor(void *arg);

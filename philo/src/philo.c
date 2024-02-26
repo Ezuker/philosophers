@@ -6,7 +6,7 @@
 /*   By: bcarolle <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/18 19:52:07 by bcarolle          #+#    #+#             */
-/*   Updated: 2024/02/26 16:37:07 by bcarolle         ###   ########.fr       */
+/*   Updated: 2024/02/26 17:50:58 by bcarolle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,15 +20,19 @@ void	*philo_routine(void *arg)
 
 	is_dead = 0;
 	philo = (t_philo *)arg;
-	if (philo->id % 2 == 0)
-		ft_usleep(50);
 	while (!is_dead)
 	{
+		if (philo->id % 2 == 0)
+			ft_usleep(50);
 		pthread_mutex_lock(&philo->parent->dead_lock);
 		is_dead = philo->parent->is_dead;
+		pthread_mutex_lock(&philo->parent->write_lock);
+		printf("is dead : %d id : %d l:30\n", is_dead, philo->id);
+		pthread_mutex_unlock(&philo->parent->write_lock);
 		pthread_mutex_unlock(&philo->parent->dead_lock);
 		if (is_dead)
 			return (arg);
+
 		pthread_mutex_lock(philo->l_fork);
 		pthread_mutex_lock(&philo->r_fork);
 		mutex_print(philo, "%ld %d has taken a fork\n");
@@ -47,12 +51,23 @@ void	*philo_routine(void *arg)
 
 		pthread_mutex_lock(&philo->parent->dead_lock);
 		is_dead = philo->parent->is_dead;
+		pthread_mutex_lock(&philo->parent->write_lock);
+		printf("is dead : %d id : %d l:55\n", is_dead, philo->id);
+		pthread_mutex_unlock(&philo->parent->write_lock);
 		pthread_mutex_unlock(&philo->parent->dead_lock);
 		if (is_dead)
-			return (arg) ;
+			return (arg);
 
 		mutex_print(philo, "%ld %d is sleeping\n");
 		ft_usleep(philo->parent->time_to_sleep);
+		pthread_mutex_lock(&philo->parent->dead_lock);
+		is_dead = philo->parent->is_dead;
+		pthread_mutex_lock(&philo->parent->write_lock);
+		printf("is dead : %d id : %d l:66\n", is_dead, philo->id);
+		pthread_mutex_unlock(&philo->parent->write_lock);
+		pthread_mutex_unlock(&philo->parent->dead_lock);
+		if (is_dead)
+			return (arg);
 		mutex_print(philo, "%ld %d is thinking\n");
 	}
 	return (arg);
