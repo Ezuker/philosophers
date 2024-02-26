@@ -6,7 +6,7 @@
 /*   By: bcarolle <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 23:36:39 by bcarolle          #+#    #+#             */
-/*   Updated: 2024/02/24 15:51:19 by bcarolle         ###   ########.fr       */
+/*   Updated: 2024/02/26 15:36:39 by bcarolle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,29 +16,28 @@ int	struct_init_philo(t_data *data)
 {
 	int	i;
 
-	data->philo = malloc(sizeof(t_philo) * (data->num_philo + 1));
+	data->philo = malloc(sizeof(t_philo *) * (data->num_philo + 1));
 	if (!data->philo)
 		return (failed_malloc());
-	i = 0;
-	while (i < data->num_philo)
+	i = -1;
+	while (++i < data->num_philo)
 	{
-		data->philo[i].id = i + 1;
-		data->philo[i].parent = data;
-		data->philo[i].time = ft_get_current_time();
-		data->philo[i].timestamp_last_meal = 0;
-		data->philo[i].num_times_eaten = 0;
-		pthread_mutex_init(&data->philo[i].eating_lock, NULL);
-		pthread_mutex_init(&data->philo[i].is_sleeping, NULL);
-		pthread_mutex_init(&data->philo[i].is_thinking, NULL);
-		pthread_mutex_init(&data->philo[i].r_fork, NULL);
-		pthread_mutex_init(&data->philo[i].print_lock, NULL);
-		if (i == 0)
-			data->philo[i].l_fork = &data->philo[data->num_philo - 1].r_fork;
-		else
-			data->philo[i].l_fork = &data->philo[i - 1].r_fork;
-		i++;
+		data->philo[i] = malloc(sizeof(t_philo));
+		data->philo[i]->id = i + 1;
+		data->philo[i]->parent = data;
+		data->philo[i]->timestamp_last_meal = 0;
+		data->philo[i]->num_times_eaten = 0;
+		pthread_mutex_init(&data->philo[i]->r_fork, NULL);
 	}
-	data->philo[i].id = -1;
+	i = -1;
+	while (++i < data->num_philo)
+	{
+		if (i == 0)
+			data->philo[i]->l_fork = &data->philo[data->num_philo - 1]->r_fork;
+		else
+			data->philo[i]->l_fork = &data->philo[i - 1]->r_fork;
+	}
+	data->philo[i] = NULL;
 	return (0);
 }
 
@@ -50,6 +49,8 @@ int	struct_init_data(int argc, char **argv, t_data *data)
 	data->time_to_die = ft_atoi(argv[2]);
 	data->time_to_eat = ft_atoi(argv[3]);
 	data->time_to_sleep = ft_atoi(argv[4]);
+	data->start_time = ft_get_current_time();
+	data->is_dead = 0;
 	if (data->time_to_die < 60
 		|| data->time_to_eat < 60 || data->time_to_sleep < 60)
 		return (ft_print_error("Time to die or eat or sleep is too low\n"));
@@ -59,6 +60,7 @@ int	struct_init_data(int argc, char **argv, t_data *data)
 		data->num_times_eat = ft_atoi(argv[5]);
 	pthread_mutex_init(&data->write_lock, NULL);
 	pthread_mutex_init(&data->dead_lock, NULL);
+	pthread_mutex_init(&data->print_lock, NULL);
 	if (struct_init_philo(data))
 		return (1);
 	return (0);

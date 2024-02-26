@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_atoi.c                                          :+:      :+:    :+:   */
+/*   ft_utils.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: bcarolle <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 19:08:55 by bcarolle          #+#    #+#             */
-/*   Updated: 2024/02/21 19:09:05 by bcarolle         ###   ########.fr       */
+/*   Updated: 2024/02/26 16:08:47 by bcarolle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,4 +36,42 @@ int	ft_atoi(const char *str)
 		i++;
 	}
 	return (res * sign);
+}
+
+size_t	ft_strlen(const char *str)
+{
+	size_t	i;
+
+	i = 0;
+	while (str[i])
+		i++;
+	return (i);
+}
+
+size_t	ft_get_current_time(void)
+{
+	struct timeval	time;
+
+	gettimeofday(&time, NULL);
+	return ((time.tv_sec * 1000) + (time.tv_usec / 1000));
+}
+
+void	mutex_print(t_philo *philo, char *str)
+{
+	size_t			time;
+
+	pthread_mutex_lock(&philo->parent->write_lock);
+	time = ft_get_current_time() - philo->parent->start_time;
+	printf(str, time, philo->id);
+	pthread_mutex_unlock(&philo->parent->write_lock);
+}
+
+int	ft_usleep(size_t milliseconds)
+{
+	size_t	start;
+
+	start = ft_get_current_time();
+	while ((ft_get_current_time() - start) < milliseconds)
+		usleep(10);
+	return (0);
 }

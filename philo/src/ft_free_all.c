@@ -1,23 +1,29 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_strlen.c                                        :+:      :+:    :+:   */
+/*   ft_free_all.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: bcarolle <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/02/21 16:58:19 by bcarolle          #+#    #+#             */
-/*   Updated: 2024/02/21 16:59:07 by bcarolle         ###   ########.fr       */
+/*   Created: 2024/02/26 15:19:29 by bcarolle          #+#    #+#             */
+/*   Updated: 2024/02/26 15:48:14 by bcarolle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-size_t	ft_strlen(const char *str)
+void	ft_free_all(t_data *data)
 {
-	size_t	i;
+	int	i;
 
 	i = 0;
-	while (str[i])
+	while (i < data->num_philo)
+	{
+		pthread_mutex_destroy(&data->philo[i]->r_fork);
+		free(data->philo[i]);
 		i++;
-	return (i);
+	}
+	pthread_mutex_destroy(&data->write_lock);
+	free(data->philo);
+	free(data);
 }

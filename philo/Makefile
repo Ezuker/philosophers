@@ -27,10 +27,10 @@ SRC = \
 	src/main.c \
 	src/init_struct.c \
 	src/philo.c \
-	src/ft_strlen.c \
 	src/ft_error.c \
-	src/ft_atoi.c \
-	src/ft_get_current_time.c \
+	src/ft_utils.c \
+	src/ft_free_all.c \
+	src/monitor.c \
 
 INCLUDES = \
 	-I./include/ \
