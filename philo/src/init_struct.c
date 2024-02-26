@@ -6,7 +6,7 @@
 /*   By: bcarolle <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 23:36:39 by bcarolle          #+#    #+#             */
-/*   Updated: 2024/02/26 15:36:39 by bcarolle         ###   ########.fr       */
+/*   Updated: 2024/02/26 21:55:49 by bcarolle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ int	struct_init_philo(t_data *data)
 		data->philo[i] = malloc(sizeof(t_philo));
 		data->philo[i]->id = i + 1;
 		data->philo[i]->parent = data;
-		data->philo[i]->timestamp_last_meal = 0;
+		data->philo[i]->when_last_meal = 0;
 		data->philo[i]->num_times_eaten = 0;
 		pthread_mutex_init(&data->philo[i]->r_fork, NULL);
 	}

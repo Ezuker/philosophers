@@ -6,7 +6,7 @@
 /*   By: bcarolle <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/18 18:33:41 by bcarolle          #+#    #+#             */
-/*   Updated: 2024/02/26 16:40:21 by bcarolle         ###   ########.fr       */
+/*   Updated: 2024/02/26 21:55:30 by bcarolle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ typedef struct s_philo
 {
 	int				id;
 	int				num_times_eaten;
-	size_t			timestamp_last_meal;
+	size_t			when_last_meal;
 	pthread_t		philo_thread;
 	pthread_mutex_t	*l_fork;
 	pthread_mutex_t	r_fork;
