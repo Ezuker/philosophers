@@ -6,7 +6,7 @@
 /*   By: bcarolle <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/26 15:49:00 by bcarolle          #+#    #+#             */
-/*   Updated: 2024/02/27 02:11:26 by bcarolle         ###   ########.fr       */
+/*   Updated: 2024/02/27 02:24:44 by bcarolle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,6 +51,8 @@ int	check_die(t_data *data)
 		time_last_meal = data->philo[i]->when_last_meal;
 		time_to_die = data->time_to_die;
 		sem_post(&data->philo[i]->forks);
+		//time_last_meal never update because data->philo[i]->whem_last_meal
+		//will be always 0
 		if (time - time_last_meal > time_to_die)
 		{
 			mutex_print(data->philo[i], "%ld %d died\n");

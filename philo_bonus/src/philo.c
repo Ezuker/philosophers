@@ -6,7 +6,7 @@
 /*   By: bcarolle <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/18 19:52:07 by bcarolle          #+#    #+#             */
-/*   Updated: 2024/02/27 02:08:34 by bcarolle         ###   ########.fr       */
+/*   Updated: 2024/02/27 02:26:18 by bcarolle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,10 @@ int	check_if_dead(t_philo *philo)
 
 	dead = sem_open(philo->parent->name_sem_dead, 0644);
 	if (dead == SEM_FAILED)
+	{
+		printf("Child   : [sem_open] Failed id : %d\n", philo->id);
 		return (1);
+	}
 	return (0);
 }
 
@@ -42,10 +45,11 @@ void	philo_eating(t_philo *philo)
 	}
 	mutex_print(philo, "%ld %d has taken a fork\n");
 	mutex_print(philo, "%ld %d has taken a fork\n");
-	sem_wait(forks);
+	sem_wait(&philo->forks);
 	philo->num_times_eaten++;
 	philo->when_last_meal = ft_get_current_time() - philo->parent->start_time;
-	sem_post(forks);
+	sem_post(&philo->forks);
+	printf("when last meal%ld\n", philo->when_last_meal);
 	if (check_if_dead(philo))
 	{
 		sem_post(forks);
