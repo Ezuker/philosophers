@@ -6,7 +6,7 @@
 /*   By: bcarolle <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/18 19:52:07 by bcarolle          #+#    #+#             */
-/*   Updated: 2024/02/27 02:26:18 by bcarolle         ###   ########.fr       */
+/*   Updated: 2024/02/27 15:52:31 by bcarolle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,12 +27,13 @@ int	check_if_dead(t_philo *philo)
 
 void	philo_eating(t_philo *philo)
 {
-	sem_t *forks;
+	sem_t	*forks;
 
 	forks = sem_open(philo->parent->name_sem, 0644, philo->parent->num_philo);
-	if (forks == SEM_FAILED){
+	if (forks == SEM_FAILED)
+	{
 		perror("Child   : [sem_open] Failed\n");
-		return;
+		return ;
 	}
 	sem_wait(forks);
 	sem_wait(forks);
