@@ -6,7 +6,7 @@
 /*   By: bcarolle <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/18 18:34:30 by bcarolle          #+#    #+#             */
-/*   Updated: 2024/02/28 02:50:43 by bcarolle         ###   ########.fr       */
+/*   Updated: 2024/02/28 14:33:49 by bcarolle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ int	main(int argc, char **argv)
 	}
 	pthread_create(&monitor_thread, NULL, monitor, (void *)data);
 	philo(data);
-	ft_usleep(10);
+	ft_usleep(100);
 	pthread_join(monitor_thread, NULL);
 	ft_free_all(data);
 	return (0);

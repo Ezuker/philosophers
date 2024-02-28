@@ -6,7 +6,7 @@
 /*   By: bcarolle <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/18 18:33:41 by bcarolle          #+#    #+#             */
-/*   Updated: 2024/02/28 04:27:47 by bcarolle         ###   ########.fr       */
+/*   Updated: 2024/02/28 14:05:12 by bcarolle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,7 @@ typedef struct s_data
 	char			*name_sem;
 	sem_t			*write;
 	sem_t			*open;
-	// sem_t			*forks;
+	sem_t			*forks;
 	t_philo			**philo;
 }				t_data;
 

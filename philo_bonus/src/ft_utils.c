@@ -6,7 +6,7 @@
 /*   By: bcarolle <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 19:08:55 by bcarolle          #+#    #+#             */
-/*   Updated: 2024/02/28 01:15:37 by bcarolle         ###   ########.fr       */
+/*   Updated: 2024/02/28 13:58:48 by bcarolle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,8 +24,10 @@ void	mutex_print(t_philo *philo, char *str)
 {
 	size_t			time;
 
+	sem_wait(philo->parent->write);
 	time = ft_get_current_time() - philo->parent->start_time;
 	printf(str, time, philo->id);
+	sem_post(philo->parent->write);
 }
 
 int	ft_usleep(size_t milliseconds)

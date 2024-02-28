@@ -6,7 +6,7 @@
 /*   By: bcarolle <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/26 15:49:00 by bcarolle          #+#    #+#             */
-/*   Updated: 2024/02/28 04:31:47 by bcarolle         ###   ########.fr       */
+/*   Updated: 2024/02/28 14:38:23 by bcarolle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 int	add_eat(t_data *data)
 {
 	int		i;
-	sem_t	*meal;
+	// sem_t	*meal;
 
 	i = -1;
 	while (++i < data->num_philo)
@@ -25,15 +25,20 @@ int	add_eat(t_data *data)
 		if (!check_eat(data))
 			return (1);
 		// sem_wait(data->open);
-		meal = sem_open(data->philo[i]->name_sem, 0);
+		// meal = sem_open(data->philo[i]->name_sem, 0);
 		// sem_post(data->open);
-		sem_wait(meal);
+		// sem_post(data->philo[i]->meal);
+		if (sem_wait(data->philo[i]->meal) < 0)
+		{
+			printf("sem_wait error\n");
+			return (1);
+		}
+		// sem_close(meal);
 		mutex_print(data->philo[i], "%ld %d has taken a fork\n");
 		mutex_print(data->philo[i], "%ld %d has taken a fork\n");
 		mutex_print(data->philo[i], "%ld %d is eating\n");
 		data->philo[i]->num_times_eaten++;
 		data->philo[i]->when_last_meal = ft_get_current_time() - data->start_time;
-		sem_close(meal);
 	}
 	return (0);
 }

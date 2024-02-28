@@ -6,7 +6,7 @@
 /*   By: bcarolle <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 23:36:39 by bcarolle          #+#    #+#             */
-/*   Updated: 2024/02/28 04:31:24 by bcarolle         ###   ########.fr       */
+/*   Updated: 2024/02/28 14:38:06 by bcarolle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ int	struct_init_philo(t_data *data)
 			return (failed_malloc());
 		sem_unlink(data->philo[i]->name_sem);
 		data->philo[i]->meal = sem_open(data->philo[i]->name_sem, O_CREAT, 0644, 0);
-		sem_close(data->philo[i]->meal);
+		// sem_close(data->philo[i]->meal);
 	}
 	data->philo[i] = NULL;
 	return (0);
@@ -58,8 +58,6 @@ int	struct_init_data(int argc, char **argv, t_data *data)
 		data->num_times_eat = ft_atoi(argv[5]);
 	data->name_sem = ft_strdup("/philo");
 	data->write = sem_open("write", O_CREAT, 0644, 1);
-	// data->open = sem_open("open", O_CREAT, 0644, 1);
-	// data->forks = sem_open("forks", O_CREAT, 0644, data->num_philo);
 	if (!data->name_sem)
 		return (failed_malloc());
 	if (struct_init_philo(data))
