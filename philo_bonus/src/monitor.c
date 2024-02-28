@@ -6,7 +6,7 @@
 /*   By: bcarolle <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/26 15:49:00 by bcarolle          #+#    #+#             */
-/*   Updated: 2024/02/28 14:38:23 by bcarolle         ###   ########.fr       */
+/*   Updated: 2024/02/28 16:11:26 by bcarolle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,8 +58,8 @@ int	check_eat(t_data *data)
 	if (i == data->num_philo)
 	{
 		i = -1;
-		printf("All philosophers have eaten %d times\n", data->num_times_eat);
 		sem_wait(data->write);
+		printf("All philosophers have eaten %d times\n", data->num_times_eat);
 		while (++i < data->num_philo)
 			kill(data->philo[i]->pid, SIGKILL);
 		sem_post(data->write);
