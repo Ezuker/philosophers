@@ -6,29 +6,11 @@
 /*   By: bcarolle <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 23:36:39 by bcarolle          #+#    #+#             */
-/*   Updated: 2024/02/27 02:09:52 by bcarolle         ###   ########.fr       */
+/*   Updated: 2024/02/28 01:37:25 by bcarolle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo_bonus.h"
-
-char	*ft_strdup(char *s1)
-{
-	char	*str;
-	size_t	i;
-
-	i = 0;
-	str = malloc(sizeof(char) * (ft_strlen(s1) + 1));
-	if (!str)
-		return (NULL);
-	while (s1[i])
-	{
-		str[i] = s1[i];
-		i++;
-	}
-	str[i] = '\0';
-	return (str);
-}
 
 int	struct_init_philo(t_data *data)
 {
@@ -47,7 +29,15 @@ int	struct_init_philo(t_data *data)
 		data->philo[i]->parent = data;
 		data->philo[i]->when_last_meal = 0;
 		data->philo[i]->num_times_eaten = 0;
-		sem_init(&data->philo[i]->forks, 1, 1);
+		data->philo[i]->name_sem = ft_strjoin("/philo", ft_itoa(i));
+		if (!data->philo[i]->name_sem)
+			return (failed_malloc());
+		sem_unlink(data->philo[i]->name_sem);
+		data->philo[i]->meal = sem_open(data->philo[i]->name_sem,
+				O_CREAT, 0644, 0);
+		if (data->philo[i]->meal == SEM_FAILED)
+			return (ft_print_error("Failed to open semaphore\n"));
+		sem_close(data->philo[i]->meal);
 	}
 	data->philo[i] = NULL;
 	return (0);
@@ -70,10 +60,10 @@ int	struct_init_data(int argc, char **argv, t_data *data)
 		data->num_times_eat = -1;
 	else
 		data->num_times_eat = ft_atoi(argv[5]);
-	data->name_sem = ft_strdup("philo");
+	data->name_sem = ft_strdup("/philo");
 	if (!data->name_sem)
 		return (failed_malloc());
-	data->name_sem_dead = ft_strdup("philo_dead");
+	data->name_sem_dead = ft_strdup("/philo_dead");
 	if (!data->name_sem_dead)
 		return (failed_malloc());
 	if (struct_init_philo(data))

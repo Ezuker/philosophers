@@ -6,31 +6,42 @@
 /*   By: bcarolle <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/26 15:49:00 by bcarolle          #+#    #+#             */
-/*   Updated: 2024/02/27 02:24:44 by bcarolle         ###   ########.fr       */
+/*   Updated: 2024/02/28 01:25:34 by bcarolle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo_bonus.h"
 
+
 int	check_eat(t_data *data)
 {
-	int	i;
-	int	num_times_eat;
-	int	num_times_eaten;
+	int		i;
+	int		num_times_eat;
+	sem_t	*meal;
 
 	i = 0;
+	num_times_eat = data->num_times_eat;
 	while (i < data->num_philo)
 	{
-		num_times_eat = data->num_times_eat;
-		num_times_eaten = data->philo[i]->num_times_eaten;
-		if (data->num_times_eat != -1 && num_times_eaten >= num_times_eat)
+		meal = sem_open(data->philo[i]->name_sem, 0644);
+		int haha = sem_getvalue(meal, &haha);
+		printf("sem_getvalue = %d\n", haha);
+		if (sem_wait(meal))
+			data->philo[i]->num_times_eaten++;
+		// printf("num_times_eat = %d\n", data->philo[i]->num_times_eaten);
+		sem_close(meal);
+		if (data->num_times_eat != -1
+			&& data->philo[i]->num_times_eaten >= num_times_eat)
 			i++;
 		else
 			break ;
 	}
 	if (i == data->num_philo)
 	{
-		sem_unlink(data->name_sem_dead);
+		data->is_dead = 1;
+		i = -1;
+		while (++i < data->num_philo)
+			kill(data->philo[i]->pid, SIGKILL);
 		return (0);
 	}
 	return (1);
@@ -47,16 +58,15 @@ int	check_die(t_data *data)
 	while (i < data->num_philo)
 	{
 		time = ft_get_current_time() - data->start_time;
-		sem_wait(&data->philo[i]->forks);
 		time_last_meal = data->philo[i]->when_last_meal;
 		time_to_die = data->time_to_die;
-		sem_post(&data->philo[i]->forks);
-		//time_last_meal never update because data->philo[i]->whem_last_meal
-		//will be always 0
 		if (time - time_last_meal > time_to_die)
 		{
 			mutex_print(data->philo[i], "%ld %d died\n");
-			sem_unlink(data->name_sem_dead);
+			data->is_dead = 1;
+			i = -1;
+			while (++i < data->num_philo)
+				kill(data->philo[i]->pid, SIGKILL);
 			return (0);
 		}
 		i++;

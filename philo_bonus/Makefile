@@ -31,6 +31,7 @@ SRC = \
 	src/ft_utils.c \
 	src/ft_free_all.c \
 	src/monitor.c \
+	src/ft_utils_libft.c \
 
 INCLUDES = \
 	-I./include/ \
