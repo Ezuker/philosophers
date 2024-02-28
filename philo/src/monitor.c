@@ -6,7 +6,7 @@
 /*   By: bcarolle <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/26 15:49:00 by bcarolle          #+#    #+#             */
-/*   Updated: 2024/02/26 21:56:06 by bcarolle         ###   ########.fr       */
+/*   Updated: 2024/02/28 17:10:16 by bcarolle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,14 +47,16 @@ int	check_die(t_data *data)
 	size_t	time_last_meal;
 	size_t	time_to_die;
 
-	i = 0;
-	while (i < data->num_philo)
+	i = -1;
+	while (++i < data->num_philo)
 	{
 		time = ft_get_current_time() - data->start_time;
 		pthread_mutex_lock(&data->write_lock);
 		time_last_meal = data->philo[i]->when_last_meal;
 		time_to_die = data->time_to_die;
 		pthread_mutex_unlock(&data->write_lock);
+		if (time < time_last_meal)
+			time_last_meal = time;
 		if (time - time_last_meal > time_to_die)
 		{
 			pthread_mutex_lock(&data->dead_lock);
@@ -63,7 +65,6 @@ int	check_die(t_data *data)
 			pthread_mutex_unlock(&data->dead_lock);
 			return (0);
 		}
-		i++;
 	}
 	return (1);
 }

@@ -6,7 +6,7 @@
 /*   By: bcarolle <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/18 19:52:07 by bcarolle          #+#    #+#             */
-/*   Updated: 2024/02/27 00:45:47 by bcarolle         ###   ########.fr       */
+/*   Updated: 2024/02/28 17:09:28 by bcarolle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,7 @@ void	*philo_routine(void *arg)
 	while (!is_dead)
 	{
 		if (philo->id % 2 == 0)
-			ft_usleep(5);
+			ft_usleep(3);
 		if (check_if_dead(philo))
 			return (arg);
 		philo_eating(philo);

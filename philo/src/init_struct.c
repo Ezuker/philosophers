@@ -6,7 +6,7 @@
 /*   By: bcarolle <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 23:36:39 by bcarolle          #+#    #+#             */
-/*   Updated: 2024/02/27 02:17:37 by bcarolle         ###   ########.fr       */
+/*   Updated: 2024/02/28 16:18:06 by bcarolle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,7 @@ void	choose_left_forks(t_data *data)
 			data->philo[i]->l_fork = &data->philo[i - 1]->r_fork;
 	}
 }
+
 int	struct_init_philo(t_data *data)
 {
 	int	i;
