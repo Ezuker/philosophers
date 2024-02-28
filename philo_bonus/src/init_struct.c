@@ -6,7 +6,7 @@
 /*   By: bcarolle <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 23:36:39 by bcarolle          #+#    #+#             */
-/*   Updated: 2024/02/28 01:37:25 by bcarolle         ###   ########.fr       */
+/*   Updated: 2024/02/28 04:31:24 by bcarolle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,10 +33,7 @@ int	struct_init_philo(t_data *data)
 		if (!data->philo[i]->name_sem)
 			return (failed_malloc());
 		sem_unlink(data->philo[i]->name_sem);
-		data->philo[i]->meal = sem_open(data->philo[i]->name_sem,
-				O_CREAT, 0644, 0);
-		if (data->philo[i]->meal == SEM_FAILED)
-			return (ft_print_error("Failed to open semaphore\n"));
+		data->philo[i]->meal = sem_open(data->philo[i]->name_sem, O_CREAT, 0644, 0);
 		sem_close(data->philo[i]->meal);
 	}
 	data->philo[i] = NULL;
@@ -52,7 +49,6 @@ int	struct_init_data(int argc, char **argv, t_data *data)
 	data->time_to_eat = ft_atoi(argv[3]);
 	data->time_to_sleep = ft_atoi(argv[4]);
 	data->start_time = ft_get_current_time();
-	data->is_dead = 0;
 	if (data->time_to_die < 60
 		|| data->time_to_eat < 60 || data->time_to_sleep < 60)
 		return (ft_print_error("Time to die or eat or sleep is too low\n"));
@@ -61,10 +57,10 @@ int	struct_init_data(int argc, char **argv, t_data *data)
 	else
 		data->num_times_eat = ft_atoi(argv[5]);
 	data->name_sem = ft_strdup("/philo");
+	data->write = sem_open("write", O_CREAT, 0644, 1);
+	// data->open = sem_open("open", O_CREAT, 0644, 1);
+	// data->forks = sem_open("forks", O_CREAT, 0644, data->num_philo);
 	if (!data->name_sem)
-		return (failed_malloc());
-	data->name_sem_dead = ft_strdup("/philo_dead");
-	if (!data->name_sem_dead)
 		return (failed_malloc());
 	if (struct_init_philo(data))
 		return (1);

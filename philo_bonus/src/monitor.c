@@ -6,42 +6,58 @@
 /*   By: bcarolle <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/26 15:49:00 by bcarolle          #+#    #+#             */
-/*   Updated: 2024/02/28 01:25:34 by bcarolle         ###   ########.fr       */
+/*   Updated: 2024/02/28 04:31:47 by bcarolle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo_bonus.h"
 
+int	add_eat(t_data *data)
+{
+	int		i;
+	sem_t	*meal;
 
+	i = -1;
+	while (++i < data->num_philo)
+	{
+		if (!check_die(data))
+			return (1);
+		if (!check_eat(data))
+			return (1);
+		// sem_wait(data->open);
+		meal = sem_open(data->philo[i]->name_sem, 0);
+		// sem_post(data->open);
+		sem_wait(meal);
+		mutex_print(data->philo[i], "%ld %d has taken a fork\n");
+		mutex_print(data->philo[i], "%ld %d has taken a fork\n");
+		mutex_print(data->philo[i], "%ld %d is eating\n");
+		data->philo[i]->num_times_eaten++;
+		data->philo[i]->when_last_meal = ft_get_current_time() - data->start_time;
+		sem_close(meal);
+	}
+	return (0);
+}
 int	check_eat(t_data *data)
 {
 	int		i;
-	int		num_times_eat;
-	sem_t	*meal;
 
 	i = 0;
-	num_times_eat = data->num_times_eat;
 	while (i < data->num_philo)
 	{
-		meal = sem_open(data->philo[i]->name_sem, 0644);
-		int haha = sem_getvalue(meal, &haha);
-		printf("sem_getvalue = %d\n", haha);
-		if (sem_wait(meal))
-			data->philo[i]->num_times_eaten++;
-		// printf("num_times_eat = %d\n", data->philo[i]->num_times_eaten);
-		sem_close(meal);
 		if (data->num_times_eat != -1
-			&& data->philo[i]->num_times_eaten >= num_times_eat)
+			&& data->philo[i]->num_times_eaten >= data->num_times_eat)
 			i++;
 		else
 			break ;
 	}
 	if (i == data->num_philo)
 	{
-		data->is_dead = 1;
 		i = -1;
+		printf("All philosophers have eaten %d times\n", data->num_times_eat);
+		sem_wait(data->write);
 		while (++i < data->num_philo)
 			kill(data->philo[i]->pid, SIGKILL);
+		sem_post(data->write);
 		return (0);
 	}
 	return (1);
@@ -63,7 +79,6 @@ int	check_die(t_data *data)
 		if (time - time_last_meal > time_to_die)
 		{
 			mutex_print(data->philo[i], "%ld %d died\n");
-			data->is_dead = 1;
 			i = -1;
 			while (++i < data->num_philo)
 				kill(data->philo[i]->pid, SIGKILL);
@@ -82,12 +97,9 @@ void	*monitor(void *arg)
 	data = (t_data *)arg;
 	while (1)
 	{
-		result = check_eat(data);
-		if (result == 0)
-			return (NULL);
-		result = check_die(data);
-		if (result == 0)
-			return (NULL);
+		result = add_eat(data);
+		if (result == 1)
+			return (NULL) ;
 	}
 	return (NULL);
 }

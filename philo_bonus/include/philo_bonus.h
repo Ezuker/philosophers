@@ -6,7 +6,7 @@
 /*   By: bcarolle <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/18 18:33:41 by bcarolle          #+#    #+#             */
-/*   Updated: 2024/02/28 01:16:45 by bcarolle         ###   ########.fr       */
+/*   Updated: 2024/02/28 04:27:47 by bcarolle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,13 +41,14 @@ typedef struct s_data
 {
 	int				num_philo;
 	int				num_times_eat;
-	int				is_dead;
 	size_t			time_to_die;
 	size_t			time_to_eat;
 	size_t			time_to_sleep;
 	size_t			start_time;
 	char			*name_sem;
-	char			*name_sem_dead;
+	sem_t			*write;
+	sem_t			*open;
+	// sem_t			*forks;
 	t_philo			**philo;
 }				t_data;
 
