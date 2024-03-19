@@ -6,7 +6,7 @@
 /*   By: bcarolle <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/18 18:34:30 by bcarolle          #+#    #+#             */
-/*   Updated: 2024/02/28 14:33:49 by bcarolle         ###   ########.fr       */
+/*   Updated: 2024/03/19 17:21:16 by bcarolle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,6 @@
 int	main(int argc, char **argv)
 {
 	t_data		*data;
-	pthread_t	monitor_thread;
 
 	if (argc < 5 || argc > 6)
 		return (ft_print_error("Wrong number of arguments\n"));
@@ -27,10 +26,8 @@ int	main(int argc, char **argv)
 		free(data);
 		return (1);
 	}
-	pthread_create(&monitor_thread, NULL, monitor, (void *)data);
 	philo(data);
-	ft_usleep(100);
-	pthread_join(monitor_thread, NULL);
+	// ft_usleep(100);
 	ft_free_all(data);
 	return (0);
 }

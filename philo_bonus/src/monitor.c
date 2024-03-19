@@ -6,7 +6,7 @@
 /*   By: bcarolle <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/26 15:49:00 by bcarolle          #+#    #+#             */
-/*   Updated: 2024/02/28 16:11:26 by bcarolle         ###   ########.fr       */
+/*   Updated: 2024/03/19 17:28:37 by bcarolle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,17 +28,15 @@ int	add_eat(t_data *data)
 		// meal = sem_open(data->philo[i]->name_sem, 0);
 		// sem_post(data->open);
 		// sem_post(data->philo[i]->meal);
-		if (sem_wait(data->philo[i]->meal) < 0)
-		{
-			printf("sem_wait error\n");
-			return (1);
-		}
+		sem_wait(data->philo[i]->meal);
+		// {
+		// 	printf("sem_wait error\n");
+		// 	return (1);
+		// }
 		// sem_close(meal);
-		mutex_print(data->philo[i], "%ld %d has taken a fork\n");
-		mutex_print(data->philo[i], "%ld %d has taken a fork\n");
-		mutex_print(data->philo[i], "%ld %d is eating\n");
 		data->philo[i]->num_times_eaten++;
 		data->philo[i]->when_last_meal = ft_get_current_time() - data->start_time;
+		// sem_post(data->philo[i]->meal);
 	}
 	return (0);
 }

@@ -6,7 +6,7 @@
 /*   By: bcarolle <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/18 19:52:07 by bcarolle          #+#    #+#             */
-/*   Updated: 2024/02/28 16:16:45 by bcarolle         ###   ########.fr       */
+/*   Updated: 2024/03/19 17:21:10 by bcarolle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,30 +14,28 @@
 
 void	philo_eating(t_philo *philo)
 {
-	sem_t	*forks;
-	int		haha;
+	// sem_t	*forks;
+	// int		haha;
 
-	forks = sem_open(philo->parent->name_sem, O_CREAT, 0644, philo->parent->num_philo);
-	sem_getvalue(forks, &haha);
-	printf("22 philo_eating value = %d thread id = %d\n", haha, philo->id);
-	sem_wait(forks);
-	sem_wait(forks);
-	sem_getvalue(forks, &haha);
+	// forks = sem_open(philo->parent->name_sem, O_CREAT, 0644, philo->parent->num_philo);
+	// sem_getvalue(forks, &haha);
+	// printf("22 philo_eating value = %d thread id = %d\n", haha, philo->id);
+	sem_wait(philo->parent->forks);
+	sem_wait(philo->parent->forks);
+	mutex_print(philo, "%ld %d has taken a fork\n");
+	mutex_print(philo, "%ld %d has taken a fork\n");
+	mutex_print(philo, "%ld %d is eating\n");
 	sem_post(philo->meal);
-	printf("31 philo_eating value = %d thread id = %d\n", haha, philo->id);
 	ft_usleep(philo->parent->time_to_eat);
-	sem_post(forks);
-	sem_post(forks);
-	sem_close(forks);
+	sem_post(philo->parent->forks);
+	sem_post(philo->parent->forks);
+	// sem_close(forks);
 }
 
 void	philo_routine(t_philo *philo)
 {
-	// printf("Thread %d entered\n", philo->id);
 	while (1)
 	{
-		// if (philo->id % 2 && philo->parent->num_philo % 2)
-		// 	ft_usleep(5);
 		philo_eating(philo);
 		mutex_print(philo, "%ld %d is sleeping\n");
 		ft_usleep(philo->parent->time_to_sleep);
@@ -52,11 +50,12 @@ int	philo(t_data *data)
 	int		i;
 	pid_t	pid;
 	int		number;
+	pthread_t	monitor_thread;
 
 	number = data->num_philo;
 	sem_unlink(data->name_sem);
 	data->forks = sem_open(data->name_sem, O_CREAT, 0644, number);
-	sem_close(data->forks);
+	// sem_close(data->forks);
 	i = -1;
 	while (++i < data->num_philo)
 	{
@@ -67,5 +66,7 @@ int	philo(t_data *data)
 		data->philo[i]->pid = pid;
 		sem_post(data->write);
 	}
+	pthread_create(&monitor_thread, NULL, monitor, (void *)data);
+	pthread_join(monitor_thread, NULL);
 	return (0);
 }
