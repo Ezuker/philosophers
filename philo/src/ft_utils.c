@@ -6,7 +6,7 @@
 /*   By: bcarolle <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 19:08:55 by bcarolle          #+#    #+#             */
-/*   Updated: 2024/02/26 16:08:47 by bcarolle         ###   ########.fr       */
+/*   Updated: 2024/03/19 15:30:17 by bcarolle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,6 +61,11 @@ void	mutex_print(t_philo *philo, char *str)
 	size_t			time;
 
 	pthread_mutex_lock(&philo->parent->write_lock);
+	if (check_if_dead(philo))
+	{
+		pthread_mutex_unlock(&philo->parent->write_lock);
+		return;
+	}
 	time = ft_get_current_time() - philo->parent->start_time;
 	printf(str, time, philo->id);
 	pthread_mutex_unlock(&philo->parent->write_lock);

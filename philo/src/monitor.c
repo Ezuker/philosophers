@@ -6,7 +6,7 @@
 /*   By: bcarolle <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/26 15:49:00 by bcarolle          #+#    #+#             */
-/*   Updated: 2024/02/28 17:10:16 by bcarolle         ###   ########.fr       */
+/*   Updated: 2024/03/19 15:34:02 by bcarolle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,8 +59,8 @@ int	check_die(t_data *data)
 			time_last_meal = time;
 		if (time - time_last_meal > time_to_die)
 		{
-			pthread_mutex_lock(&data->dead_lock);
 			mutex_print(data->philo[i], "%ld %d died\n");
+			pthread_mutex_lock(&data->dead_lock);
 			data->is_dead = 1;
 			pthread_mutex_unlock(&data->dead_lock);
 			return (0);

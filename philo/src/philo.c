@@ -6,7 +6,7 @@
 /*   By: bcarolle <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/18 19:52:07 by bcarolle          #+#    #+#             */
-/*   Updated: 2024/02/28 17:09:28 by bcarolle         ###   ########.fr       */
+/*   Updated: 2024/03/19 15:35:51 by bcarolle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,10 +22,23 @@ int	check_if_dead(t_philo *philo)
 	return (is_dead);
 }
 
+void	lock_good_fork(t_philo *philo)
+{
+	if (philo->l_fork > &philo->r_fork)
+	{
+		pthread_mutex_lock(philo->l_fork);
+		pthread_mutex_lock(&philo->r_fork);
+	}
+	else
+	{
+		pthread_mutex_lock(&philo->r_fork);
+		pthread_mutex_lock(philo->l_fork);
+	}
+}
+
 void	philo_eating(t_philo *philo)
 {
-	pthread_mutex_lock(philo->l_fork);
-	pthread_mutex_lock(&philo->r_fork);
+	lock_good_fork(philo);
 	if (check_if_dead(philo))
 	{
 		pthread_mutex_unlock(philo->l_fork);
